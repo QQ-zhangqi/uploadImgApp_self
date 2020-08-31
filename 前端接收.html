@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端接收文件</title>
+</head>
+<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+<body>
+    <input type="file">
+    <button id="btn">上传</button>
+    <img src="" alt="">
+    <script>
+        var fd = new FormData();
+        $("[type=file]").change(function(e)
+        {
+            //此属性名必须和后端multer().single("img")指定的一致
+            fd.append("img",e.target.files[0])
+        })
+
+        $("#btn").click(function()
+        {
+            $.ajax({
+                method:"post",
+                url:"http:127.0.0.1:80/upload",
+                data:fd,
+                contentType:false,
+                processData:false,
+                success:function(res)
+                {
+                    console.log(res);
+                    // 记得拼接前面的路径，记得后端要对文件进行静态托管
+                    $("img").attr("src",`http://127.0.0.1/upload/`+res.imgUrl);
+
+                }
+            })
+        })
+    </script>
+
+    
+
+</body>
+</html>
